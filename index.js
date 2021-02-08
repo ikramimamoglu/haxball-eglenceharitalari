@@ -1,6 +1,6 @@
 let yourNickname = "ikramimamoglu";
 let room = HBInit({
-  roomName: "Fun maps by " + yourNickname,
+  roomName: "Eglence haritalari > " + yourNickname,
   noPlayer: true,
   maxPlayers: 16,
 });
