@@ -9,6 +9,22 @@ let teams = {
   red: 1,
   spectators: 0,
 };
+function JSONtoStr(...args) {
+  let res = [];
+  for (let arg in args) {
+    if (typeof arg != "object") continue;
+    res.push(arg);
+  }
+  return res;
+}
+function strtoJSON(...args) {
+  let res = [];
+  for (const arg in args) {
+    if (typeof arg != "string") return;
+    res.push(arg);
+  }
+  return res;
+}
 function setPlayerTeam(pID, tID) {
   room.setPlayerTeam(pID, tID);
 }
