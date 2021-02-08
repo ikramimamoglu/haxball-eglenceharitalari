@@ -4,10 +4,14 @@ let room = HBInit({
   noPlayer: true,
   maxPlayers: 16,
 });
+let randompass = null;
 let teams = {
   blue: 2,
   red: 1,
   spectators: 0,
+};
+let mention = (name) => {
+  return name.replace(" ", "_");
 };
 function JSONtoStr(...args) {
   let res = [];
@@ -58,4 +62,41 @@ function _onPlayerJoin(p) {
   addPlayerData();
   welcomeMsg();
 }
+function _onPlayerChat(p, m) {
+  let admin = p.admin,
+    id = p.id,
+    name = p.name;
+  function setPassword() {
+    if (!admin)
+      return room.sendAnnouncement(
+        "Bu komutu kullanabilmeniz icin admin olmaniz gerekmektedir! " +
+          "@" +
+          mention(name),
+        id
+      );
+    if (randompass == null) {
+      randompass = String(Math.floor(Math.random() * 10000));
+      room.setPassword(randompass);
+      room.sendAnnouncement("Odanin sifresi degistirildi", null);
+    } else {
+      randompass = null;
+      room.setPassword(randompass);
+      room.sendAnnouncement("Odanin sifresi sifirlandi!", null);
+    }
+  }
+  function Pass() {
+    if (!admin)
+      return "Bu komutu kullanabilmeniz icin admin olmaniz gerekmektedir.";
+    return randompass == null
+      ? "Odanin sifresi yok!"
+      : "Odanin sifresi: " + randompass;
+  }
+  if (m == "!pass" || m.startsWith("!pass")) {
+    setPassword();
+  }
+  if (m == "?pass" || m.startsWith("?pass")) {
+    room.sendAnnouncement(Pass(), id);
+  }
+}
 room.onPlayerJoin = _onPlayerJoin;
+room.onPlayerChat = _onPlayerChat;
