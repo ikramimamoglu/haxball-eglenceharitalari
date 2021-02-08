@@ -91,10 +91,10 @@ function _onPlayerChat(p, m) {
       ? "Odanin sifresi yok!"
       : "Odanin sifresi: " + randompass;
   }
-  if (m == "!pass" || m.startsWith("!pass")) {
+  if (m.startsWith("!pass")) {
     setPassword();
   }
-  if (m == "?pass" || m.startsWith("?pass")) {
+  if (m.startsWith("?pass")) {
     room.sendAnnouncement(Pass(), id);
   }
 }
