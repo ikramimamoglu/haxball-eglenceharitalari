@@ -17,7 +17,7 @@ function JSONtoStr(...args) {
   let res = [];
   for (let arg in args) {
     if (typeof arg != "object") continue;
-    res.push(arg);
+    res.push(JSON.stringify(arg));
   }
   return res;
 }
@@ -25,7 +25,7 @@ function strtoJSON(...args) {
   let res = [];
   for (const arg in args) {
     if (typeof arg != "string") return;
-    res.push(arg);
+    res.push(JSON.parse(arg));
   }
   return res;
 }
