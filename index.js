@@ -2,6 +2,7 @@ let yourNickname = "ikramimamoglu";
 let room = HBInit({
   roomName: "Fun maps by " + yourNickname,
   noPlayer: true,
+  maxPlayers: 16,
 });
 let teams = {
   blue: 2,
