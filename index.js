@@ -13,21 +13,11 @@ let teams = {
 let mention = (name) => {
   return name.replace(" ", "_");
 };
-function JSONtoStr(...args) {
-  let res = [];
-  for (let arg in args) {
-    if (typeof arg != "object") continue;
-    res.push(JSON.stringify(arg));
-  }
-  return res;
+function JSONtoStr(arg) {
+  return JSON.stringify(arg);
 }
-function strtoJSON(...args) {
-  let res = [];
-  for (const arg in args) {
-    if (typeof arg != "string") return;
-    res.push(JSON.parse(arg));
-  }
-  return res;
+function strtoJSON(arg) {
+  return JSON.parse(arg);
 }
 function setPlayerTeam(pID, tID) {
   room.setPlayerTeam(pID, tID);
