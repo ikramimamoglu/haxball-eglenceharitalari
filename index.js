@@ -22,7 +22,7 @@ function strtoJSON(arg) {
 function setPlayerTeam(pID, tID) {
   room.setPlayerTeam(pID, tID);
 }
-window.playerdata = new Map();
+let playerdata = new Map();
 function _onPlayerJoin(p) {
   let auth = p.auth,
     id = p.id,
@@ -81,12 +81,46 @@ function _onPlayerChat(p, m) {
       ? "Odanin sifresi yok!"
       : "Odanin sifresi: " + randompass;
   }
+  function getUserInfo() {
+    let idregex = /#\d+/g;
+    if (idregex.test(m)) {
+      if (!admin)
+        return room.sendAnnouncement(
+          "Baska birisinin bilgilerini gorebilmek icin admin olmaniz gerekmektedir :)",
+          id
+        );
+      let ids = m.match(idregex);
+      for (id in ids) {
+        data = playerdata.get(id);
+        room.sendAnnouncement(`#${id} idsine sahip kullanicinin bilgileri:
+IPv4: ${data.IPv4Addr}
+Auth: ${data.auth}`);
+      }
+    }
+    let data = playerdata.get(id);
+    room.sendAnnouncement(
+      `${name}, iste bilgileriniz:
+IPv4: ${data.IPv4Addr}
+Auth: ${data.auth}
+ID: ${id}`,
+      id
+    );
+  }
   if (m.startsWith("!pass")) {
     setPassword();
   }
   if (m.startsWith("?pass")) {
     room.sendAnnouncement(Pass(), id);
   }
+  if (m.startsWith("!info")) {
+    getUserInfo();
+  }
 }
+
+function _onPlayerLeave(p) {
+  playerdata.delete(p.id);
+}
+
 room.onPlayerJoin = _onPlayerJoin;
 room.onPlayerChat = _onPlayerChat;
+room.onPlayerLeave = _onPlayerLeave;
