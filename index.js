@@ -82,6 +82,7 @@ function _onPlayerChat(p, m) {
       : "Odanin sifresi: " + randompass;
   }
   function getUserInfo() {
+    let data;
     let idregex = /#\d+/g;
     if (idregex.test(m)) {
       if (!admin)
@@ -90,21 +91,23 @@ function _onPlayerChat(p, m) {
           id
         );
       let ids = m.match(idregex);
-      for (id in ids) {
-        data = playerdata.get(id);
-        room.sendAnnouncement(`#${id} idsine sahip kullanicinin bilgileri:
+      ids.forEach((e) => {
+        e = Number(e.replace("#", ""));
+        data = playerdata.get(e);
+        room.sendAnnouncement(`${e} idli kullanicinin bilgileri:
 IPv4: ${data.IPv4Addr}
 Auth: ${data.auth}`);
-      }
-    }
-    let data = playerdata.get(id);
-    room.sendAnnouncement(
-      `${name}, iste bilgileriniz:
+      });
+    } else {
+      data = playerdata.get(id);
+      room.sendAnnouncement(
+        `${name}, iste bilgileriniz:
 IPv4: ${data.IPv4Addr}
 Auth: ${data.auth}
 ID: ${id}`,
-      id
-    );
+        id
+      );
+    }
   }
   if (m.startsWith("!pass")) {
     setPassword();
@@ -118,7 +121,7 @@ ID: ${id}`,
 }
 
 function _onPlayerLeave(p) {
-  playerdata.delete(p.id);
+  // playerdata.delete(p.id); Isterseniz bunu aktif ederek kullanici ciktiginda verilerinin silinmesini saglayabilirsiniz.
 }
 
 room.onPlayerJoin = _onPlayerJoin;
