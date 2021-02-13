@@ -1,3 +1,7 @@
+/**
+ * @author ikramimamoglu
+ * @copyright 2021
+ */
 let yourNickname = "ikramimamoglu";
 let room = HBInit({
   roomName: "Eglence haritalari > " + yourNickname,
@@ -10,8 +14,13 @@ let teams = {
   red: 1,
   spectators: 0,
 };
+let mapIndex = 0,
+  sayac = {
+    saniye: 0,
+    dakika: 0,
+  };
 let mention = (name) => {
-  return name.replace(" ", "_");
+  return `@${name.replace(" ", "_")}`;
 };
 function JSONtoStr(arg) {
   return JSON.stringify(arg);
@@ -60,7 +69,6 @@ function _onPlayerChat(p, m) {
     if (!admin)
       return room.sendAnnouncement(
         "Bu komutu kullanabilmeniz icin admin olmaniz gerekmektedir! " +
-          "@" +
           mention(name),
         id
       );
@@ -123,7 +131,48 @@ ID: ${id}`,
 function _onPlayerLeave(p) {
   // playerdata.delete(p.id); Isterseniz bunu aktif ederek kullanici ciktiginda verilerinin silinmesini saglayabilirsiniz.
 }
-
+/**
+ *
+ * @param {String} hData Handlebars
+ * @param {Number} team TeamID
+ *
+ */
+function _Map(hData, team = teams.red) {
+  if (typeof hData != "string" || typeof team != "number")
+    throw new Error(
+      "hData parametresi string degil/team parametresi sayi (number) degil"
+    );
+  return {
+    HandlebarsData: hData,
+    team: team,
+  };
+}
+function addNewMap(mapString, team = teams.red) {
+  let jsondata = strtoJSON(localStorage.getItem("server"));
+  jsondata.maps.push(_Map(mapString, team));
+  localStorage.setItem("server", JSONtoStr(jsondata));
+  console.log("Map basariyla eklendi.");
+}
+function _onRoomLink(url) {
+  console.log("Oda acildi! URL : " + url);
+  if (!localStorage.getItem("server")) {
+    let JSONData = {
+      maps: [_Map()],
+    };
+    localStorage.setItem("server", JSONtoStr(JSONData));
+  }
+  let map = strtoJSON(localStorage.getItem("server")).maps[mapIndex]; // Map array'indeki ilk haritayi acar.
+  room.setCustomStadium(map);
+  room.startGame();
+}
 room.onPlayerJoin = _onPlayerJoin;
 room.onPlayerChat = _onPlayerChat;
 room.onPlayerLeave = _onPlayerLeave;
+room.onRoomLink = _onRoomLink;
+setInterval(() => {
+  mapIndex += 1;
+  if (mapIndex == strtoJSON(localStorage.getItem("server")).maps.length) {
+    mapIndex = 0;
+  }
+  room.setCustomStadium();
+});
