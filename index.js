@@ -2,7 +2,7 @@
  * @author ikramimamoglu
  * @copyright 2021
  */
-let sure = 2;
+let sure = 15;
 let yourNickname = "ikramimamoglu";
 let room = HBInit({
   roomName: "Eglence haritalari > " + yourNickname,
@@ -175,5 +175,8 @@ setInterval(() => {
   if (mapIndex == strtoJSON(localStorage.getItem("server")).maps.length) {
     mapIndex = 0;
   }
-  room.setCustomStadium();
+  let stadium = strtoJSON(localStorage.getItem("server")).maps[mapIndex];
+  room.stopGame();
+  room.setCustomStadium(stadium);
+  room.startGame();
 }, sure * 1000 * 60);
