@@ -2,6 +2,7 @@
  * @author ikramimamoglu
  * @copyright 2021
  */
+let sure = 2;
 let yourNickname = "ikramimamoglu";
 let room = HBInit({
   roomName: "Eglence haritalari > " + yourNickname,
@@ -175,4 +176,4 @@ setInterval(() => {
     mapIndex = 0;
   }
   room.setCustomStadium();
-});
+}, sure * 1000 * 60);
