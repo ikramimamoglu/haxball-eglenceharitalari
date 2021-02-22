@@ -20,6 +20,25 @@ let mapIndex = 0,
     saniye: 0,
     dakika: 0,
   };
+function removeItemOnce(arr, value) {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+}
+
+function removeItemAll(arr, value) {
+  var i = 0;
+  while (i < arr.length) {
+    if (arr[i] === value) {
+      arr.splice(i, 1);
+    } else {
+      ++i;
+    }
+  }
+  return arr;
+}
 let mention = (name) => {
   return `@${name.replace(" ", "_")}`;
 };
