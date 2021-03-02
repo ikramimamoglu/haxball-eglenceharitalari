@@ -117,9 +117,12 @@ function _onPlayerChat(p, m) {
       ids.forEach((e) => {
         e = Number(e.replace("#", ""));
         data = playerdata.get(e);
-        room.sendAnnouncement(`${e} idli kullanicinin bilgileri:
+        room.sendAnnouncement(
+          `${e} idli kullanicinin bilgileri:
 IPv4: ${data.IPv4Addr}
-Auth: ${data.auth}`);
+Auth: ${data.auth}`,
+          id
+        );
       });
     } else {
       data = playerdata.get(id);
