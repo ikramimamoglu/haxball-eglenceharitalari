@@ -53,10 +53,7 @@ function setPlayerTeam(pID, tID) {
 }
 let playerdata = new Map();
 function _onPlayerJoin(p) {
-  let auth = p.auth,
-    id = p.id,
-    conn = p.conn,
-    name = p.name;
+  let { auth, id, conn, name } = p;
   function decryptHex(str) {
     let hexString = str;
     let strOut = "";
@@ -82,9 +79,7 @@ function _onPlayerJoin(p) {
   welcomeMsg();
 }
 function _onPlayerChat(p, m) {
-  let admin = p.admin,
-    id = p.id,
-    name = p.name;
+  let { admin, id, name } = p;
   function setPassword() {
     if (!admin)
       return room.sendAnnouncement(
