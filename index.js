@@ -10,7 +10,12 @@ let room = HBInit({
   noPlayer: true,
   maxPlayers: 16,
 });
-let { setPlayerAdmin: adminlikver, setPlayerTeam } = room;
+let {
+  setPlayerAdmin: adminlikver,
+  setPlayerTeam,
+  sendAnnouncement: duyuru,
+  sendChat: mesaj,
+} = room;
 let { parse: strtoJSON, stringify: JSONtoStr } = JSON;
 let randompass = null;
 let teams = {
@@ -67,7 +72,7 @@ function _onPlayerJoin(p) {
     playerdata.set(id, playerData);
   }
   function welcomeMsg() {
-    return room.sendAnnouncement(`${name},hos geldin`);
+    return duyuru(`${name},hos geldin`);
   }
   setPlayerTeam(id, teams.red);
   addPlayerData();
@@ -77,7 +82,7 @@ function _onPlayerChat(p, m) {
   let { admin, id, name } = p;
   function setPassword() {
     if (!admin)
-      return room.sendAnnouncement(
+      return duyuru(
         "Bu komutu kullanabilmeniz icin admin olmaniz gerekmektedir! " +
           mention(name),
         id
@@ -85,11 +90,11 @@ function _onPlayerChat(p, m) {
     if (randompass == null) {
       randompass = String(Math.floor(Math.random() * 10000));
       room.setPassword(randompass);
-      room.sendAnnouncement("Odanin sifresi degistirildi", null);
+      duyuru("Odanin sifresi degistirildi", null);
     } else {
       randompass = null;
       room.setPassword(randompass);
-      room.sendAnnouncement("Odanin sifresi sifirlandi!", null);
+      duyuru("Odanin sifresi sifirlandi!", null);
     }
   }
   function Pass() {
@@ -104,7 +109,7 @@ function _onPlayerChat(p, m) {
     let idregex = /#\d+/g;
     if (idregex.test(m)) {
       if (!admin)
-        return room.sendAnnouncement(
+        return duyuru(
           "Baska birisinin bilgilerini gorebilmek icin admin olmaniz gerekmektedir :)",
           id
         );
@@ -112,7 +117,7 @@ function _onPlayerChat(p, m) {
       ids.forEach((e) => {
         e = Number(e.replace("#", ""));
         data = playerdata.get(e);
-        room.sendAnnouncement(
+        duyuru(
           `${e} idli kullanicinin bilgileri:
 IPv4: ${data.IPv4Addr}
 Auth: ${data.auth}`,
@@ -121,7 +126,7 @@ Auth: ${data.auth}`,
       });
     } else {
       data = playerdata.get(id);
-      room.sendAnnouncement(
+      duyuru(
         `${name}, iste bilgileriniz:
 IPv4: ${data.IPv4Addr}
 Auth: ${data.auth}
@@ -134,7 +139,7 @@ ID: ${id}`,
     setPassword();
   }
   if (m.startsWith("?pass")) {
-    room.sendAnnouncement(Pass(), id);
+    duyuru(Pass(), id);
   }
   if (m.startsWith("!info")) {
     getUserInfo();
