@@ -2,13 +2,16 @@
  * @author ikramimamoglu
  * @copyright 2021
  */
-let sure = 15;
+let sure = 5;
+let team = 1;
 let yourNickname = "ikramimamoglu";
 let room = HBInit({
   roomName: "Eglence haritalari > " + yourNickname,
   noPlayer: true,
   maxPlayers: 16,
 });
+let { setPlayerAdmin: adminlikver, setPlayerTeam } = room;
+let { parse: strtoJSON, stringify: JSONtoStr } = JSON;
 let randompass = null;
 let teams = {
   blue: 2,
@@ -42,15 +45,7 @@ function removeItemAll(arr, value) {
 let mention = (name) => {
   return `@${name.replace(" ", "_")}`;
 };
-function JSONtoStr(arg) {
-  return JSON.stringify(arg);
-}
-function strtoJSON(arg) {
-  return JSON.parse(arg);
-}
-function setPlayerTeam(pID, tID) {
-  room.setPlayerTeam(pID, tID);
-}
+
 let playerdata = new Map();
 function _onPlayerJoin(p) {
   let { auth, id, conn, name } = p;
