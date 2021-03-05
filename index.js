@@ -6,15 +6,17 @@ let sure = 5;
 let team = 1;
 let yourNickname = "ikramimamoglu";
 let room = HBInit({
-  roomName: "Eglence haritalari > " + yourNickname,
-  noPlayer: true,
-  maxPlayers: 16,
-});
+    roomName: "Eglence haritalari > " + yourNickname,
+    noPlayer: true,
+    maxPlayers: 16,
+  }),
+  uyarilar = new Map();
 let {
   setPlayerAdmin: adminlikver,
   setPlayerTeam,
   sendAnnouncement: duyuru,
   sendChat: mesaj,
+  kickPlayer: kick,
 } = room;
 let { parse: strtoJSON, stringify: JSONtoStr } = JSON;
 let randompass = null;
@@ -80,6 +82,25 @@ function _onPlayerJoin(p) {
 }
 function _onPlayerChat(p, m) {
   let { admin, id, name } = p;
+  function mesajKufurIceriyor() {
+    let kufurlerr = /(amk|aq|awq|amq|mk)/gim;
+    return kufurlerr.test(m);
+  }
+  if (mesajKufurIceriyor()) {
+    let auth = playerdata.get(id);
+    if (!uyarilar.has(auth)) {
+      uyarilar.set(auth, 1);
+      return duyuru("Ilk uyarini aldin! Konusmalarina dikkat et!", id);
+    }
+    let deger = Number(uyarilar.get(auth));
+    deger += 1;
+    uyarilar.set(auth, deger);
+    if (uyarilar.get(auth) == 3) {
+      kick(id, "3 defa uyardik ama hala akillanmiyorsun!", true);
+      uyarilar.set(auth, 0);
+      return;
+    }
+  }
   function setPassword() {
     if (!admin)
       return duyuru(
@@ -165,6 +186,14 @@ function _Map(hData, team = teams.red) {
     team: team,
   };
 }
+
+function deleteMap(item) {
+  let a = strtoJSON(localStorage.getItem("server"));
+  a.maps = removeItemAll(a.maps, item);
+  localStorage.setItem("server", JSONtoStr(a));
+  console.log("Map silindi");
+}
+
 function addNewMap(mapString, team = teams.red) {
   let jsondata = strtoJSON(localStorage.getItem("server"));
   jsondata.maps.push(_Map(mapString, team));
