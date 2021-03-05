@@ -88,7 +88,7 @@ function _onPlayerChat(p, m) {
   }
   if (mesajKufurIceriyor()) {
     let auth = playerdata.get(id);
-    if (!uyarilar.has(auth)) {
+    if (!uyarilar.has(auth) || uyarilar.get(auth) == 0) {
       uyarilar.set(auth, 1);
       return duyuru("Ilk uyarini aldin! Konusmalarina dikkat et!", id);
     }
